@@ -39,13 +39,18 @@
         /* --- CONTROL PANEL --- */
         .controls {
             background-color: #2b2d31; padding: 20px; border-radius: 8px;
-            width: 320px; box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            width: 340px; box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            max-height: 80vh; overflow-y: auto;
         }
+        
+        .controls::-webkit-scrollbar { width: 8px; }
+        .controls::-webkit-scrollbar-thumb { background: #1e1f22; border-radius: 4px; }
+
         .controls h2 {
             margin-top: 0; font-size: 16px; text-transform: uppercase;
             color: #f2f3f5; margin-bottom: 20px; border-bottom: 1px solid #3f4147; padding-bottom: 10px;
         }
-        .control-group { margin-bottom: 15px; display: flex; flex-direction: column; }
+        .control-group { margin-bottom: 18px; display: flex; flex-direction: column; }
         .control-group label {
             font-size: 12px; font-weight: bold; color: #b5bac1; margin-bottom: 8px; text-transform: uppercase;
         }
@@ -64,21 +69,27 @@
         .file-upload-btn:hover { background-color: #6d6f78; }
         .control-group input[type="file"] { display: none; }
 
-        /* NOUVEAU : Style pour les boutons de badges */
+        .styled-select {
+            background-color: #1e1f22; border: none; color: #dbdee1; padding: 10px;
+            border-radius: 4px; font-family: inherit; width: 100%; cursor: pointer;
+        }
+        .styled-select:focus { outline: none; box-shadow: 0 0 0 2px #5865F2; }
+
         .badge-options { display: flex; flex-wrap: wrap; gap: 8px; }
         .badge-option {
             background-color: #1e1f22; padding: 6px 10px; border-radius: 4px;
             font-size: 13px; cursor: pointer; color: #b5bac1; border: 1px solid transparent;
-            user-select: none; transition: 0.2s; display: flex; align-items: center; gap: 5px;
+            user-select: none; transition: 0.2s;
         }
         .badge-option:hover { background-color: #313338; }
-        .badge-option input { display: none; /* On cache la case à cocher moche */ }
-        .badge-option.active { background-color: #5865F2; color: white; } /* Quand sélectionné */
+        .badge-option input { display: none; }
+        .badge-option.active { background-color: #5865F2; color: white; }
 
         /* --- PROFILE CARD --- */
         .profile-card {
             background-color: #232428; width: 340px; border-radius: 8px;
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.24); overflow: hidden; position: relative;
+            position: sticky; top: 40px; 
         }
         .banner { height: 120px; background-color: #5865F2; background-size: cover; background-position: center; }
         .header { position: relative; padding: 0 16px; }
@@ -92,8 +103,9 @@
         .badges { display: flex; justify-content: flex-end; padding-top: 12px; height: 30px; gap: 4px; }
         .badge {
             width: 22px; height: 22px; background-color: #2b2d31; border-radius: 4px;
-            display: flex; justify-content: center; align-items: center; font-size: 14px; /* Pour centrer l'emoji */
+            display: flex; justify-content: center; align-items: center; overflow: hidden;
         }
+        .badge img { width: 100%; height: 100%; object-fit: contain; }
         
         .user-info { padding: 16px; margin-top: 10px; background-color: #111214; border-radius: 8px; margin: 16px; }
         .username { font-size: 20px; font-weight: bold; color: #f2f3f5; margin: 0; word-wrap: break-word; }
@@ -118,14 +130,11 @@
             <h2>Customize Profile</h2>
             
             <div class="control-group">
-                <label>Avatar (Image/GIF)</label>
-                <label for="input-avatar" class="file-upload-btn">Choose File</label>
+                <label>Avatar & Banner</label>
+                <label for="input-avatar" class="file-upload-btn" style="margin-bottom: 5px;">Upload Avatar</label>
                 <input type="file" id="input-avatar" accept="image/*">
-            </div>
-
-            <div class="control-group">
-                <label>Banner (Image/GIF)</label>
-                <label for="input-banner" class="file-upload-btn">Choose File</label>
+                
+                <label for="input-banner" class="file-upload-btn">Upload Banner</label>
                 <input type="file" id="input-banner" accept="image/*">
             </div>
 
@@ -134,27 +143,88 @@
                 <input type="color" id="input-color" value="#5865F2">
             </div>
 
-            <!-- NOUVEAU : Section Badges -->
+            <hr style="border: 0; border-bottom: 1px solid #3f4147; margin: 20px 0;">
+
+            <!-- ================= BADGES ================= -->
+            
             <div class="control-group">
-                <label>Badges</label>
+                <label>Staff & Partners</label>
                 <div class="badge-options">
-                    <label class="badge-option">
-                        <input type="checkbox" value="nitro"> 🚀 Nitro
-                    </label>
-                    <label class="badge-option">
-                        <input type="checkbox" value="booster"> 💎 Booster
-                    </label>
-                    <label class="badge-option">
-                        <input type="checkbox" value="hypesquad"> 🛡️ HypeSquad
-                    </label>
-                    <label class="badge-option">
-                        <input type="checkbox" value="activedev"> 💻 Active Dev
-                    </label>
-                    <label class="badge-option">
-                        <input type="checkbox" value="early"> 👑 Early Supporter
-                    </label>
+                    <label class="badge-option"><input type="checkbox" value="staff"> Discord Staff</label>
+                    <label class="badge-option"><input type="checkbox" value="partner"> Partner</label>
                 </div>
             </div>
+
+            <div class="control-group">
+                <label>HypeSquad</label>
+                <div class="badge-options">
+                    <label class="badge-option"><input type="checkbox" value="bravery"> Bravery</label>
+                    <label class="badge-option"><input type="checkbox" value="brilliance"> Brilliance</label>
+                    <label class="badge-option"><input type="checkbox" value="balance"> Balance</label>
+                    <label class="badge-option"><input type="checkbox" value="events"> Events</label>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label>Bug Hunters</label>
+                <div class="badge-options">
+                    <label class="badge-option"><input type="checkbox" value="bughunter1"> Normal</label>
+                    <label class="badge-option"><input type="checkbox" value="bughunter2"> Level 2</label>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label>Development & Moderation</label>
+                <div class="badge-options">
+                    <label class="badge-option"><input type="checkbox" value="early_bot"> Early Bot Dev</label>
+                    <label class="badge-option"><input type="checkbox" value="mod_alumni"> Mod Alumni</label>
+                    <label class="badge-option"><input type="checkbox" value="early_supporter"> Early Supporter</label>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label>New Features</label>
+                <div class="badge-options">
+                    <label class="badge-option"><input type="checkbox" value="quest"> Quest</label>
+                    <label class="badge-option"><input type="checkbox" value="orbs"> Orbs</label>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label>Discord Nitro</label>
+                <select id="select-nitro" class="styled-select">
+                    <option value="">No Nitro</option>
+                    <option value="nitro">Base Nitro</option>
+                    <option value="nitro_bronze">Nitro Bronze (1+ Month)</option>
+                    <option value="nitro_silver">Nitro Silver (3+ Months)</option>
+                    <option value="nitro_gold">Nitro Gold (6+ Months)</option>
+                    <option value="nitro_platinum">Nitro Platinum (12+ Months)</option>
+                    <option value="nitro_diamond">Nitro Diamond (24+ Months)</option>
+                    <option value="nitro_emerald">Nitro Emerald (36+ Months)</option>
+                    <option value="nitro_ruby">Nitro Ruby (60+ Months)</option>
+                    <option value="nitro_opal">Nitro Opal (72+ Months)</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label>Server Booster</label>
+                <select id="select-booster" class="styled-select">
+                    <option value="">No Boost</option>
+                    <option value="boost1">1 Month</option>
+                    <option value="boost2">2 Months</option>
+                    <option value="boost3">3 Months</option>
+                    <option value="boost6">6 Months</option>
+                    <option value="boost9">9 Months</option>
+                    <option value="boost12">12 Months</option>
+                    <option value="boost15">15 Months</option>
+                    <option value="boost18">18 Months</option>
+                    <option value="boost24">24 Months</option>
+                </select>
+            </div>
+
+            <hr style="border: 0; border-bottom: 1px solid #3f4147; margin: 20px 0;">
+
+            <!-- ================= TEXTE ================= -->
 
             <div class="control-group">
                 <label for="input-username">Username</label>
@@ -180,7 +250,6 @@
                 <div class="avatar-wrapper">
                     <div class="avatar" id="card-avatar"></div>
                 </div>
-                <!-- C'est ici que les badges vont s'ajouter -->
                 <div class="badges" id="card-badges"></div>
             </div>
             
@@ -196,7 +265,6 @@
     </div>
 
     <script>
-        // -- Textes et Images --
         const inputUsername = document.getElementById('input-username');
         const inputTag = document.getElementById('input-tag');
         const inputAbout = document.getElementById('input-about');
@@ -210,50 +278,99 @@
         const cardBanner = document.getElementById('card-banner');
         const cardAvatar = document.getElementById('card-avatar');
         
-        // -- Badges --
         const badgeCheckboxes = document.querySelectorAll('.badge-option input');
+        const selectNitro = document.getElementById('select-nitro');
+        const selectBooster = document.getElementById('select-booster');
         const cardBadgesContainer = document.getElementById('card-badges');
 
-        // Association entre le nom du badge et son "image" (ici un emoji)
+        // NOUVEAU : Dictionnaire mis à jour avec les différents niveaux de Nitro
         const badgesData = {
-            'nitro': '🚀',
-            'booster': '💎',
-            'hypesquad': '🛡️',
-            'activedev': '💻',
-            'early': '👑'
+            'staff': 'images/staff.svg',
+            'partner': 'images/partner.svg',
+            'bravery': 'images/bravery.svg',
+            'brilliance': 'images/brilliance.svg',
+            'balance': 'images/balance.svg',
+            'events': 'images/events.svg',
+            'bughunter1': 'images/bughunter1.svg',
+            'bughunter2': 'images/bughunter2.svg',
+            'early_bot': 'images/early_bot.svg',
+            'mod_alumni': 'images/mod_alumni.svg',
+            'early_supporter': 'images/early_supporter.svg',
+            'quest': 'images/quest.png',
+            'orbs': 'images/orbs.svg',
+            
+            // Évolutions Nitro
+            'nitro': 'images/nitro.svg',
+            'nitro_bronze': 'images/bronze.png',
+            'nitro_silver': 'images/silver.png',
+            'nitro_gold': 'images/gold.png',
+            'nitro_platinum': 'images/platinum.png',
+            'nitro_diamond': 'images/diamond.png',
+            'nitro_emerald': 'images/emerald.png',
+            'nitro_ruby': 'images/ruby.png',
+            'nitro_opal': 'images/opal.png',
+            
+            // Évolutions Booster
+            'boost1': 'images/boost1.svg',
+            'boost2': 'images/boost2.svg',
+            'boost3': 'images/boost3.svg',
+            'boost6': 'images/boost6.svg',
+            'boost9': 'images/boost9.svg',
+            'boost12': 'images/boost12.svg',
+            'boost15': 'images/boost15.svg',
+            'boost18': 'images/boost18.svg',
+            'boost24': 'images/boost24.svg'
         };
 
-        // Fonction pour mettre à jour la liste des badges sur la carte
-        function updateBadges() {
-            cardBadgesContainer.innerHTML = ''; // On vide les badges actuels
+        function addBadgeToCard(imageSrc, altText) {
+            const badgeElement = document.createElement('div');
+            badgeElement.className = 'badge';
             
-            badgeCheckboxes.forEach(checkbox => {
-                if (checkbox.checked) {
-                    // Crée le petit carré noir
-                    const badgeElement = document.createElement('div');
-                    badgeElement.className = 'badge';
-                    // Ajoute l'emoji correspondant
-                    badgeElement.textContent = badgesData[checkbox.value];
-                    // L'ajoute à la carte
-                    cardBadgesContainer.appendChild(badgeElement);
-                }
-            });
+            const img = document.createElement('img');
+            img.src = imageSrc;
+            img.alt = altText;
+            
+            img.onerror = function() {
+                this.onerror = null; 
+                this.src = 'https://via.placeholder.com/22x22/2b2d31/FFFFFF?text=?';
+            };
+
+            badgeElement.appendChild(img);
+            cardBadgesContainer.appendChild(badgeElement);
         }
 
-        // Écouteur d'événement sur chaque case à cocher
+        function updateBadges() {
+            cardBadgesContainer.innerHTML = ''; 
+            
+            // 1. Badges cochés
+            badgeCheckboxes.forEach(checkbox => {
+                if (checkbox.checked && badgesData[checkbox.value]) {
+                    addBadgeToCard(badgesData[checkbox.value], checkbox.value);
+                }
+            });
+
+            // 2. Badge Nitro
+            if (selectNitro.value && badgesData[selectNitro.value]) {
+                addBadgeToCard(badgesData[selectNitro.value], 'Nitro');
+            }
+
+            // 3. Badge Booster
+            if (selectBooster.value && badgesData[selectBooster.value]) {
+                addBadgeToCard(badgesData[selectBooster.value], 'Booster');
+            }
+        }
+
         badgeCheckboxes.forEach(checkbox => {
             checkbox.addEventListener('change', (e) => {
-                // Change la couleur du bouton dans le menu (Bleu si activé, Gris sinon)
-                if (e.target.checked) {
-                    e.target.parentElement.classList.add('active');
-                } else {
-                    e.target.parentElement.classList.remove('active');
-                }
-                updateBadges(); // Rafraîchit les badges sur la carte
+                if (e.target.checked) e.target.parentElement.classList.add('active');
+                else e.target.parentElement.classList.remove('active');
+                updateBadges();
             });
         });
 
-        // -- Événements Textes et Images (Déjà présents) --
+        selectNitro.addEventListener('change', updateBadges);
+        selectBooster.addEventListener('change', updateBadges);
+
         inputUsername.addEventListener('input', (e) => { cardUsername.textContent = e.target.value || 'YourUsername'; });
         inputTag.addEventListener('input', (e) => { cardTag.textContent = e.target.value || '@yourusername'; });
         inputAbout.addEventListener('input', (e) => { cardAbout.textContent = e.target.value; });
