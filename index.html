@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discord Profile Previewer</title>
+    <style>
+        /* --- BASE STYLING --- */
+        body {
+            background-color: #313338; color: #dbdee1; margin: 0;
+            font-family: 'gg sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            display: flex; flex-direction: column; min-height: 100vh;
+        }
+
+        /* --- NAVBAR --- */
+        .navbar {
+            background-color: #1e1f22; padding: 15px 30px; display: flex;
+            justify-content: space-between; align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+        .navbar-brand { font-size: 20px; font-weight: bold; color: #f2f3f5; }
+        .nav-buttons { display: flex; gap: 15px; }
+        .btn {
+            padding: 10px 16px; border-radius: 4px; border: none; font-size: 14px;
+            font-weight: 500; cursor: pointer; color: white; text-decoration: none;
+            transition: background-color 0.2s;
+        }
+        .btn-login { background-color: #5865F2; }
+        .btn-login:hover { background-color: #4752c4; }
+        .btn-join { background-color: #248046; }
+        .btn-join:hover { background-color: #1a6334; }
+
+        /* --- WORKSPACE --- */
+        .workspace {
+            display: flex; justify-content: center; align-items: flex-start;
+            flex-grow: 1; padding: 40px 20px; gap: 50px;
+        }
+
+        /* --- CONTROL PANEL --- */
+        .controls {
+            background-color: #2b2d31; padding: 20px; border-radius: 8px;
+            width: 320px; box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        .controls h2 {
+            margin-top: 0; font-size: 16px; text-transform: uppercase;
+            color: #f2f3f5; margin-bottom: 20px; border-bottom: 1px solid #3f4147; padding-bottom: 10px;
+        }
+        .control-group { margin-bottom: 15px; display: flex; flex-direction: column; }
+        .control-group label {
+            font-size: 12px; font-weight: bold; color: #b5bac1; margin-bottom: 8px; text-transform: uppercase;
+        }
+        .control-group input[type="text"], .control-group textarea {
+            background-color: #1e1f22; border: none; color: #dbdee1; padding: 10px;
+            border-radius: 4px; font-family: inherit; resize: none;
+        }
+        .control-group input[type="text"]:focus, .control-group textarea:focus {
+            outline: none; box-shadow: 0 0 0 2px #5865F2;
+        }
+        .control-group input[type="color"] { background: none; border: none; height: 30px; width: 100%; cursor: pointer; }
+        .file-upload-btn {
+            background-color: #4e5058; color: white; padding: 8px 12px;
+            border-radius: 4px; font-size: 14px; cursor: pointer; text-align: center;
+        }
+        .file-upload-btn:hover { background-color: #6d6f78; }
+        .control-group input[type="file"] { display: none; }
+
+        /* NOUVEAU : Style pour les boutons de badges */
+        .badge-options { display: flex; flex-wrap: wrap; gap: 8px; }
+        .badge-option {
+            background-color: #1e1f22; padding: 6px 10px; border-radius: 4px;
+            font-size: 13px; cursor: pointer; color: #b5bac1; border: 1px solid transparent;
+            user-select: none; transition: 0.2s; display: flex; align-items: center; gap: 5px;
+        }
+        .badge-option:hover { background-color: #313338; }
+        .badge-option input { display: none; /* On cache la case à cocher moche */ }
+        .badge-option.active { background-color: #5865F2; color: white; } /* Quand sélectionné */
+
+        /* --- PROFILE CARD --- */
+        .profile-card {
+            background-color: #232428; width: 340px; border-radius: 8px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.24); overflow: hidden; position: relative;
+        }
+        .banner { height: 120px; background-color: #5865F2; background-size: cover; background-position: center; }
+        .header { position: relative; padding: 0 16px; }
+        .avatar-wrapper { position: absolute; top: -60px; background-color: #232428; border-radius: 50%; padding: 6px; }
+        .avatar {
+            width: 80px; height: 80px; border-radius: 50%; background-color: #1e1f22;
+            background-image: url('https://via.placeholder.com/80/5865F2/FFFFFF?text=Avatar'); 
+            background-size: cover; background-position: center;
+        }
+        
+        .badges { display: flex; justify-content: flex-end; padding-top: 12px; height: 30px; gap: 4px; }
+        .badge {
+            width: 22px; height: 22px; background-color: #2b2d31; border-radius: 4px;
+            display: flex; justify-content: center; align-items: center; font-size: 14px; /* Pour centrer l'emoji */
+        }
+        
+        .user-info { padding: 16px; margin-top: 10px; background-color: #111214; border-radius: 8px; margin: 16px; }
+        .username { font-size: 20px; font-weight: bold; color: #f2f3f5; margin: 0; word-wrap: break-word; }
+        .tag { font-size: 14px; color: #b5bac1; margin: 2px 0 12px 0; }
+        .about-title { font-size: 12px; font-weight: bold; text-transform: uppercase; color: #b5bac1; margin-bottom: 8px; }
+        .about-text { font-size: 14px; line-height: 1.4; margin: 0; white-space: pre-wrap; word-wrap: break-word; }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="navbar-brand">ProfilePreview</div>
+        <div class="nav-buttons">
+            <a href="#" class="btn btn-join">Join Community</a>
+            <button class="btn btn-login">Login with Discord</button>
+        </div>
+    </nav>
+
+    <div class="workspace">
+        <!-- Control Panel -->
+        <div class="controls">
+            <h2>Customize Profile</h2>
+            
+            <div class="control-group">
+                <label>Avatar (Image/GIF)</label>
+                <label for="input-avatar" class="file-upload-btn">Choose File</label>
+                <input type="file" id="input-avatar" accept="image/*">
+            </div>
+
+            <div class="control-group">
+                <label>Banner (Image/GIF)</label>
+                <label for="input-banner" class="file-upload-btn">Choose File</label>
+                <input type="file" id="input-banner" accept="image/*">
+            </div>
+
+            <div class="control-group">
+                <label for="input-color">Banner Color</label>
+                <input type="color" id="input-color" value="#5865F2">
+            </div>
+
+            <!-- NOUVEAU : Section Badges -->
+            <div class="control-group">
+                <label>Badges</label>
+                <div class="badge-options">
+                    <label class="badge-option">
+                        <input type="checkbox" value="nitro"> 🚀 Nitro
+                    </label>
+                    <label class="badge-option">
+                        <input type="checkbox" value="booster"> 💎 Booster
+                    </label>
+                    <label class="badge-option">
+                        <input type="checkbox" value="hypesquad"> 🛡️ HypeSquad
+                    </label>
+                    <label class="badge-option">
+                        <input type="checkbox" value="activedev"> 💻 Active Dev
+                    </label>
+                    <label class="badge-option">
+                        <input type="checkbox" value="early"> 👑 Early Supporter
+                    </label>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label for="input-username">Username</label>
+                <input type="text" id="input-username" value="YourUsername">
+            </div>
+
+            <div class="control-group">
+                <label for="input-tag">User Tag</label>
+                <input type="text" id="input-tag" value="@yourusername">
+            </div>
+
+            <div class="control-group">
+                <label for="input-about">About Me</label>
+                <textarea id="input-about" rows="4">Hi! This is where you can test your bio.
+✨ Aspiring Developer.</textarea>
+            </div>
+        </div>
+
+        <!-- Profile Card -->
+        <div class="profile-card">
+            <div class="banner" id="card-banner"></div>
+            <div class="header">
+                <div class="avatar-wrapper">
+                    <div class="avatar" id="card-avatar"></div>
+                </div>
+                <!-- C'est ici que les badges vont s'ajouter -->
+                <div class="badges" id="card-badges"></div>
+            </div>
+            
+            <div class="user-info">
+                <h1 class="username" id="card-username">YourUsername</h1>
+                <p class="tag" id="card-tag">@yourusername</p>
+                
+                <div class="about-title">About Me</div>
+                <p class="about-text" id="card-about">Hi! This is where you can test your bio.
+✨ Aspiring Developer.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // -- Textes et Images --
+        const inputUsername = document.getElementById('input-username');
+        const inputTag = document.getElementById('input-tag');
+        const inputAbout = document.getElementById('input-about');
+        const inputColor = document.getElementById('input-color');
+        const inputAvatar = document.getElementById('input-avatar');
+        const inputBanner = document.getElementById('input-banner');
+
+        const cardUsername = document.getElementById('card-username');
+        const cardTag = document.getElementById('card-tag');
+        const cardAbout = document.getElementById('card-about');
+        const cardBanner = document.getElementById('card-banner');
+        const cardAvatar = document.getElementById('card-avatar');
+        
+        // -- Badges --
+        const badgeCheckboxes = document.querySelectorAll('.badge-option input');
+        const cardBadgesContainer = document.getElementById('card-badges');
+
+        // Association entre le nom du badge et son "image" (ici un emoji)
+        const badgesData = {
+            'nitro': '🚀',
+            'booster': '💎',
+            'hypesquad': '🛡️',
+            'activedev': '💻',
+            'early': '👑'
+        };
+
+        // Fonction pour mettre à jour la liste des badges sur la carte
+        function updateBadges() {
+            cardBadgesContainer.innerHTML = ''; // On vide les badges actuels
+            
+            badgeCheckboxes.forEach(checkbox => {
+                if (checkbox.checked) {
+                    // Crée le petit carré noir
+                    const badgeElement = document.createElement('div');
+                    badgeElement.className = 'badge';
+                    // Ajoute l'emoji correspondant
+                    badgeElement.textContent = badgesData[checkbox.value];
+                    // L'ajoute à la carte
+                    cardBadgesContainer.appendChild(badgeElement);
+                }
+            });
+        }
+
+        // Écouteur d'événement sur chaque case à cocher
+        badgeCheckboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', (e) => {
+                // Change la couleur du bouton dans le menu (Bleu si activé, Gris sinon)
+                if (e.target.checked) {
+                    e.target.parentElement.classList.add('active');
+                } else {
+                    e.target.parentElement.classList.remove('active');
+                }
+                updateBadges(); // Rafraîchit les badges sur la carte
+            });
+        });
+
+        // -- Événements Textes et Images (Déjà présents) --
+        inputUsername.addEventListener('input', (e) => { cardUsername.textContent = e.target.value || 'YourUsername'; });
+        inputTag.addEventListener('input', (e) => { cardTag.textContent = e.target.value || '@yourusername'; });
+        inputAbout.addEventListener('input', (e) => { cardAbout.textContent = e.target.value; });
+        inputColor.addEventListener('input', (e) => {
+            cardBanner.style.backgroundImage = 'none'; 
+            cardBanner.style.backgroundColor = e.target.value;
+        });
+        inputAvatar.addEventListener('change', (e) => {
+            if (e.target.files[0]) cardAvatar.style.backgroundImage = `url('${URL.createObjectURL(e.target.files[0])}')`;
+        });
+        inputBanner.addEventListener('change', (e) => {
+            if (e.target.files[0]) cardBanner.style.backgroundImage = `url('${URL.createObjectURL(e.target.files[0])}')`;
+        });
+    </script>
+</body>
+</html>
