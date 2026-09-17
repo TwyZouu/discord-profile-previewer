@@ -19,7 +19,7 @@
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
         }
         .navbar-brand { font-size: 20px; font-weight: bold; color: #f2f3f5; }
-        .nav-buttons { display: flex; gap: 15px; }
+        .nav-buttons { display: flex; align-items: center; gap: 15px; }
         .btn {
             padding: 10px 16px; border-radius: 4px; border: none; font-size: 14px;
             font-weight: 500; cursor: pointer; color: white; text-decoration: none;
@@ -30,22 +30,27 @@
         .btn-join { background-color: #248046; }
         .btn-join:hover { background-color: #1a6334; }
 
-        /* --- WORKSPACE --- */
+        /* NOUVEAU : Style pour l'utilisateur connecté dans la navbar */
+        .nav-user {
+            display: none; /* Caché par défaut */
+            align-items: center; gap: 10px;
+            background-color: #2b2d31; padding: 6px 12px; border-radius: 20px;
+        }
+        .nav-user img { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; }
+        .nav-user span { font-size: 14px; font-weight: bold; color: #f2f3f5; }
+
+        /* --- WORKSPACE & CONTROLS --- */
         .workspace {
             display: flex; justify-content: center; align-items: flex-start;
             flex-grow: 1; padding: 40px 20px; gap: 50px;
         }
-
-        /* --- CONTROL PANEL --- */
         .controls {
             background-color: #2b2d31; padding: 20px; border-radius: 8px;
             width: 340px; box-shadow: 0 4px 10px rgba(0,0,0,0.2);
             max-height: 80vh; overflow-y: auto;
         }
-        
         .controls::-webkit-scrollbar { width: 8px; }
         .controls::-webkit-scrollbar-thumb { background: #1e1f22; border-radius: 4px; }
-
         .controls h2 {
             margin-top: 0; font-size: 16px; text-transform: uppercase;
             color: #f2f3f5; margin-bottom: 20px; border-bottom: 1px solid #3f4147; padding-bottom: 10px;
@@ -68,13 +73,11 @@
         }
         .file-upload-btn:hover { background-color: #6d6f78; }
         .control-group input[type="file"] { display: none; }
-
         .styled-select {
             background-color: #1e1f22; border: none; color: #dbdee1; padding: 10px;
             border-radius: 4px; font-family: inherit; width: 100%; cursor: pointer;
         }
         .styled-select:focus { outline: none; box-shadow: 0 0 0 2px #5865F2; }
-
         .badge-options { display: flex; flex-wrap: wrap; gap: 8px; }
         .badge-option {
             background-color: #1e1f22; padding: 6px 10px; border-radius: 4px;
@@ -99,14 +102,12 @@
             background-image: url('https://via.placeholder.com/80/5865F2/FFFFFF?text=Avatar'); 
             background-size: cover; background-position: center;
         }
-        
         .badges { display: flex; justify-content: flex-end; padding-top: 12px; height: 30px; gap: 4px; }
         .badge {
             width: 22px; height: 22px; background-color: #2b2d31; border-radius: 4px;
             display: flex; justify-content: center; align-items: center; overflow: hidden;
         }
         .badge img { width: 100%; height: 100%; object-fit: contain; }
-        
         .user-info { padding: 16px; margin-top: 10px; background-color: #111214; border-radius: 8px; margin: 16px; }
         .username { font-size: 20px; font-weight: bold; color: #f2f3f5; margin: 0; word-wrap: break-word; }
         .tag { font-size: 14px; color: #b5bac1; margin: 2px 0 12px 0; }
@@ -120,33 +121,33 @@
         <div class="navbar-brand">ProfilePreview</div>
         <div class="nav-buttons">
             <a href="#" class="btn btn-join">Join Community</a>
-            <button class="btn btn-login">Login with Discord</button>
+            
+            <!-- Bouton de connexion -->
+            <a href="https://discord.com/oauth2/authorize?client_id=1550174707305939044&response_type=code&redirect_uri=https%3A%2F%2Fseeyoupreview.vercel.app%2F&scope=identify+guilds.join" class="btn btn-login" id="login-btn">Login with Discord</a>
+            
+            <!-- Section profil (apparaît après connexion) -->
+            <div class="nav-user" id="nav-user-section">
+                <img id="nav-avatar" src="" alt="Avatar">
+                <span id="nav-username">User</span>
+            </div>
         </div>
     </nav>
 
     <div class="workspace">
-        <!-- Control Panel -->
         <div class="controls">
             <h2>Customize Profile</h2>
-            
             <div class="control-group">
                 <label>Avatar & Banner</label>
                 <label for="input-avatar" class="file-upload-btn" style="margin-bottom: 5px;">Upload Avatar</label>
                 <input type="file" id="input-avatar" accept="image/*">
-                
                 <label for="input-banner" class="file-upload-btn">Upload Banner</label>
                 <input type="file" id="input-banner" accept="image/*">
             </div>
-
             <div class="control-group">
                 <label for="input-color">Banner Color</label>
                 <input type="color" id="input-color" value="#5865F2">
             </div>
-
             <hr style="border: 0; border-bottom: 1px solid #3f4147; margin: 20px 0;">
-
-            <!-- ================= BADGES ================= -->
-            
             <div class="control-group">
                 <label>Staff & Partners</label>
                 <div class="badge-options">
@@ -154,7 +155,6 @@
                     <label class="badge-option"><input type="checkbox" value="partner"> Partner</label>
                 </div>
             </div>
-
             <div class="control-group">
                 <label>HypeSquad</label>
                 <div class="badge-options">
@@ -164,7 +164,6 @@
                     <label class="badge-option"><input type="checkbox" value="events"> Events</label>
                 </div>
             </div>
-
             <div class="control-group">
                 <label>Bug Hunters</label>
                 <div class="badge-options">
@@ -172,7 +171,6 @@
                     <label class="badge-option"><input type="checkbox" value="bughunter2"> Level 2</label>
                 </div>
             </div>
-
             <div class="control-group">
                 <label>Development & Moderation</label>
                 <div class="badge-options">
@@ -181,7 +179,6 @@
                     <label class="badge-option"><input type="checkbox" value="early_supporter"> Early Supporter</label>
                 </div>
             </div>
-
             <div class="control-group">
                 <label>New Features</label>
                 <div class="badge-options">
@@ -189,7 +186,6 @@
                     <label class="badge-option"><input type="checkbox" value="orbs"> Orbs</label>
                 </div>
             </div>
-
             <div class="control-group">
                 <label>Discord Nitro</label>
                 <select id="select-nitro" class="styled-select">
@@ -205,7 +201,6 @@
                     <option value="nitro_opal">Nitro Opal (72+ Months)</option>
                 </select>
             </div>
-
             <div class="control-group">
                 <label>Server Booster</label>
                 <select id="select-booster" class="styled-select">
@@ -221,21 +216,15 @@
                     <option value="boost24">24 Months</option>
                 </select>
             </div>
-
             <hr style="border: 0; border-bottom: 1px solid #3f4147; margin: 20px 0;">
-
-            <!-- ================= TEXTE ================= -->
-
             <div class="control-group">
                 <label for="input-username">Username</label>
                 <input type="text" id="input-username" value="YourUsername">
             </div>
-
             <div class="control-group">
                 <label for="input-tag">User Tag</label>
                 <input type="text" id="input-tag" value="@yourusername">
             </div>
-
             <div class="control-group">
                 <label for="input-about">About Me</label>
                 <textarea id="input-about" rows="4">Hi! This is where you can test your bio.
@@ -243,7 +232,6 @@
             </div>
         </div>
 
-        <!-- Profile Card -->
         <div class="profile-card">
             <div class="banner" id="card-banner"></div>
             <div class="header">
@@ -252,11 +240,9 @@
                 </div>
                 <div class="badges" id="card-badges"></div>
             </div>
-            
             <div class="user-info">
                 <h1 class="username" id="card-username">YourUsername</h1>
                 <p class="tag" id="card-tag">@yourusername</p>
-                
                 <div class="about-title">About Me</div>
                 <p class="about-text" id="card-about">Hi! This is where you can test your bio.
 ✨ Aspiring Developer.</p>
@@ -283,81 +269,39 @@
         const selectBooster = document.getElementById('select-booster');
         const cardBadgesContainer = document.getElementById('card-badges');
 
-        // NOUVEAU : Dictionnaire mis à jour avec les différents niveaux de Nitro
         const badgesData = {
-            'staff': 'images/staff.svg',
-            'partner': 'images/partner.svg',
-            'bravery': 'images/bravery.svg',
-            'brilliance': 'images/brilliance.svg',
-            'balance': 'images/balance.svg',
-            'events': 'images/events.svg',
-            'bughunter1': 'images/bughunter1.svg',
-            'bughunter2': 'images/bughunter2.svg',
-            'early_bot': 'images/early_bot.svg',
-            'mod_alumni': 'images/mod_alumni.svg',
-            'early_supporter': 'images/early_supporter.svg',
-            'quest': 'images/quest.png',
-            'orbs': 'images/orbs.svg',
-            
-            // Évolutions Nitro
-            'nitro': 'images/nitro.svg',
-            'nitro_bronze': 'images/bronze.png',
-            'nitro_silver': 'images/silver.png',
-            'nitro_gold': 'images/gold.png',
-            'nitro_platinum': 'images/platinum.png',
-            'nitro_diamond': 'images/diamond.png',
-            'nitro_emerald': 'images/emerald.png',
-            'nitro_ruby': 'images/ruby.png',
-            'nitro_opal': 'images/opal.png',
-            
-            // Évolutions Booster
-            'boost1': 'images/boost1.svg',
-            'boost2': 'images/boost2.svg',
-            'boost3': 'images/boost3.svg',
-            'boost6': 'images/boost6.svg',
-            'boost9': 'images/boost9.svg',
-            'boost12': 'images/boost12.svg',
-            'boost15': 'images/boost15.svg',
-            'boost18': 'images/boost18.svg',
-            'boost24': 'images/boost24.svg'
+            'staff': 'images/staff.svg', 'partner': 'images/partner.svg', 'partner_server': 'images/partner_server.svg',
+            'bravery': 'images/bravery.svg', 'brilliance': 'images/brilliance.svg', 'balance': 'images/balance.svg',
+            'events': 'images/events.svg', 'bughunter1': 'images/bughunter1.svg', 'bughunter2': 'images/bughunter2.svg',
+            'early_bot': 'images/early_bot.svg', 'mod_alumni': 'images/mod_alumni.svg', 'early_supporter': 'images/early_supporter.svg',
+            'quest': 'images/quest.png', 'orbs': 'images/orbs.svg', 'nitro': 'images/nitro.svg',
+            'nitro_bronze': 'images/bronze.png', 'nitro_silver': 'images/silver.png',
+            'nitro_gold': 'images/gold.png', 'nitro_platinum': 'images/platinum.png',
+            'nitro_diamond': 'images/diamond.png', 'nitro_emerald': 'images/emerald.png',
+            'nitro_ruby': 'images/ruby.png', 'boost1': 'images/boost1.svg', 'boost2': 'images/boost2.svg',
+            'boost3': 'images/boost3.svg', 'boost6': 'images/boost6.svg', 'boost9': 'images/boost9.svg',
+            'boost12': 'images/boost12.svg', 'boost15': 'images/boost15.svg', 'boost18': 'images/boost18.svg',
+            'boost24': 'images/boost24.svg', 'nitro_opal' : 'images/opal.png'
         };
 
         function addBadgeToCard(imageSrc, altText) {
             const badgeElement = document.createElement('div');
             badgeElement.className = 'badge';
-            
             const img = document.createElement('img');
             img.src = imageSrc;
             img.alt = altText;
-            
-            img.onerror = function() {
-                this.onerror = null; 
-                this.src = 'https://via.placeholder.com/22x22/2b2d31/FFFFFF?text=?';
-            };
-
+            img.onerror = function() { this.onerror = null; this.src = 'https://via.placeholder.com/22x22/2b2d31/FFFFFF?text=?'; };
             badgeElement.appendChild(img);
             cardBadgesContainer.appendChild(badgeElement);
         }
 
         function updateBadges() {
             cardBadgesContainer.innerHTML = ''; 
-            
-            // 1. Badges cochés
             badgeCheckboxes.forEach(checkbox => {
-                if (checkbox.checked && badgesData[checkbox.value]) {
-                    addBadgeToCard(badgesData[checkbox.value], checkbox.value);
-                }
+                if (checkbox.checked && badgesData[checkbox.value]) { addBadgeToCard(badgesData[checkbox.value], checkbox.value); }
             });
-
-            // 2. Badge Nitro
-            if (selectNitro.value && badgesData[selectNitro.value]) {
-                addBadgeToCard(badgesData[selectNitro.value], 'Nitro');
-            }
-
-            // 3. Badge Booster
-            if (selectBooster.value && badgesData[selectBooster.value]) {
-                addBadgeToCard(badgesData[selectBooster.value], 'Booster');
-            }
+            if (selectNitro.value && badgesData[selectNitro.value]) { addBadgeToCard(badgesData[selectNitro.value], 'Nitro'); }
+            if (selectBooster.value && badgesData[selectBooster.value]) { addBadgeToCard(badgesData[selectBooster.value], 'Booster'); }
         }
 
         badgeCheckboxes.forEach(checkbox => {
@@ -370,7 +314,6 @@
 
         selectNitro.addEventListener('change', updateBadges);
         selectBooster.addEventListener('change', updateBadges);
-
         inputUsername.addEventListener('input', (e) => { cardUsername.textContent = e.target.value || 'YourUsername'; });
         inputTag.addEventListener('input', (e) => { cardTag.textContent = e.target.value || '@yourusername'; });
         inputAbout.addEventListener('input', (e) => { cardAbout.textContent = e.target.value; });
@@ -384,6 +327,59 @@
         inputBanner.addEventListener('change', (e) => {
             if (e.target.files[0]) cardBanner.style.backgroundImage = `url('${URL.createObjectURL(e.target.files[0])}')`;
         });
+
+        // ================= CONNEXION DISCORD & NAVBAR =================
+        window.onload = () => {
+            const fragment = new URLSearchParams(window.location.hash.slice(1));
+            const accessToken = fragment.get('access_token');
+            const tokenType = fragment.get('token_type');
+
+            if (accessToken) {
+                fetch('https://discord.com/api/users/@me', {
+                    headers: { authorization: `${tokenType} ${accessToken}` },
+                })
+                .then(result => result.json())
+                .then(response => {
+                    const { username, global_name, avatar, id, banner, banner_color } = response;
+                    const displayUsername = global_name || username;
+                    
+                    // Mise à jour de la carte
+                    inputUsername.value = displayUsername;
+                    cardUsername.textContent = displayUsername;
+                    inputTag.value = `@${username}`;
+                    cardTag.textContent = `@${username}`;
+
+                    let finalAvatarUrl = 'https://cdn.discordapp.com/embed/avatars/0.png';
+                    if (avatar) {
+                        const isAnimated = avatar.startsWith('a_');
+                        const extension = isAnimated ? 'gif' : 'png';
+                        finalAvatarUrl = `https://cdn.discordapp.com/avatars/${id}/${avatar}.${extension}?size=512`;
+                        cardAvatar.style.backgroundImage = `url('${finalAvatarUrl}')`;
+                    }
+
+                    if (banner) {
+                         const isAnimatedBanner = banner.startsWith('a_');
+                         const bannerExt = isAnimatedBanner ? 'gif' : 'png';
+                         const bannerUrl = `https://cdn.discordapp.com/banners/${id}/${banner}.${bannerExt}?size=512`;
+                         cardBanner.style.backgroundImage = `url('${bannerUrl}')`;
+                    } else if (banner_color) {
+                         cardBanner.style.backgroundImage = 'none';
+                         cardBanner.style.backgroundColor = banner_color;
+                         inputColor.value = banner_color;
+                    }
+
+                    // Transformation de la Navbar
+                    document.getElementById('login-btn').style.display = 'none';
+                    document.getElementById('nav-user-section').style.display = 'flex';
+                    document.getElementById('nav-avatar').src = finalAvatarUrl;
+                    document.getElementById('nav-username').textContent = displayUsername;
+
+                    // Nettoyage de l'URL
+                    window.history.replaceState({}, document.title, window.location.pathname);
+                })
+                .catch(console.error);
+            }
+        };
     </script>
 </body>
 </html>
