@@ -6,10 +6,30 @@
     <title>Discord Profile Previewer</title>
     <style>
         /* --- BASE STYLING --- */
+        /* --- BASE STYLING --- */
         body {
-            background-color: #313338; color: #dbdee1; margin: 0;
+            margin: 0;
             font-family: 'gg sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
             display: flex; flex-direction: column; min-height: 100vh;
+            background-color: #313338; /* Couleur de secours au cas où l'image charge mal */
+        }
+
+        /* --- BACKGROUND WALLPAPER --- */
+        body::before {
+            content: "";
+            position: fixed;
+            /* On déborde un peu de l'écran pour cacher la bordure blanche créée par le flou */
+            top: -5%; left: -5%; width: 110%; height: 110%; 
+            
+            /* Remplace l'URL ci-dessous par ton image (lien web ou fichier local comme 'images/bg.jpg') */
+            background-image: url('https://media.discordapp.net/attachments/1437073857541312625/1550213970978406420/image.png?ex=6aad84c4&is=6aac3344&hm=7065ab0607eb7150191a6f6356cfab6a7bd13729138978d698e4bd640eb4e380&=&format=png&quality=lossless&width=1280&height=940'); 
+            
+            background-size: cover;
+            background-position: center;
+            
+            /* Le flou (12px) et l'assombrissement (0.5) pour que ton site reste bien lisible */
+            filter: blur(12px) brightness(0.5); 
+            z-index: -1; /* Force l'image à rester tout au fond derrière le site */
         }
 
         /* --- NAVBAR --- */
