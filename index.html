@@ -38,7 +38,20 @@
             justify-content: space-between; align-items: center;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
         }
-        .navbar-brand { font-size: 20px; font-weight: bold; color: #f2f3f5; }
+        .navbar-brand { 
+            font-size: 20px; 
+            font-weight: bold; 
+            color: #f2f3f5; 
+            display: flex; 
+            align-items: center; 
+            gap: 10px; 
+        }
+        .navbar-brand img {
+            width: 32px; 
+            height: 32px; 
+            border-radius: 50%; /* Rend le logo rond */
+            object-fit: cover;
+        }
         .nav-buttons { display: flex; align-items: center; gap: 15px; }
         .btn {
             padding: 10px 16px; border-radius: 4px; border: none; font-size: 14px;
@@ -146,7 +159,11 @@
 <body>
 
     <nav class="navbar">
-        <div class="navbar-brand">ProfilePreview</div>
+        <div class="navbar-brand">
+            <!-- Remplace 'images/logo.png' par le nom exact de ton image -->
+            <img src="images/logo.png" alt="See You Logo">
+            <span>see you | Profile Preview</span>
+        </div>
         <div class="nav-buttons">
             <!-- Bouton Join Community -->
             <a href="https://discord.gg/seeyou" class="btn btn-join" target="_blank">
