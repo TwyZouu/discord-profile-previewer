@@ -5,155 +5,142 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Discord Profile Previewer</title>
     <style>
-        /* --- BASE STYLING --- */
-        /* --- BASE STYLING --- */
+        /* --- ANIMATIONS (Fade-in) --- */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- BASE STYLING & BACKGROUND --- */
         body {
             margin: 0;
             font-family: 'gg sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
             display: flex; flex-direction: column; min-height: 100vh;
-            background-color: #313338; /* Couleur de secours au cas où l'image charge mal */
+            background-color: #313338; 
         }
-
-        /* --- BACKGROUND WALLPAPER --- */
         body::before {
-            content: "";
-            position: fixed;
-            /* On déborde un peu de l'écran pour cacher la bordure blanche créée par le flou */
+            content: ""; position: fixed;
             top: -5%; left: -5%; width: 110%; height: 110%; 
-            
-            /* Remplace l'URL ci-dessous par ton image (lien web ou fichier local comme 'images/bg.jpg') */
             background-image: url('https://media.discordapp.net/attachments/1437073857541312625/1550213970978406420/image.png?ex=6aad84c4&is=6aac3344&hm=7065ab0607eb7150191a6f6356cfab6a7bd13729138978d698e4bd640eb4e380&=&format=png&quality=lossless&width=1280&height=940'); 
-            
-            background-size: cover;
-            background-position: center;
-            
-            /* Le flou (12px) et l'assombrissement (0.5) pour que ton site reste bien lisible */
+            background-size: cover; background-position: center;
             filter: blur(12px) brightness(0.5); 
-            z-index: -1; /* Force l'image à rester tout au fond derrière le site */
+            z-index: -1; 
         }
 
-        /* --- NAVBAR --- */
+        /* --- NAVBAR (Glassmorphism) --- */
         .navbar {
-            background-color: #1e1f22; padding: 15px 30px; display: flex;
-            justify-content: space-between; align-items: center;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            background-color: rgba(30, 31, 34, 0.65); /* Fond semi-transparent */
+            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); /* Effet Verre */
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05); /* Ligne subtile */
+            padding: 15px 30px; display: flex; justify-content: space-between; align-items: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            animation: fadeUp 0.6s ease-out;
         }
-        .navbar-brand { 
-            font-size: 20px; 
-            font-weight: bold; 
-            color: #f2f3f5; 
-            display: flex; 
-            align-items: center; 
-            gap: 10px; 
-        }
-        .navbar-brand img {
-            width: 32px; 
-            height: 32px; 
-            border-radius: 50%; /* Rend le logo rond */
-            object-fit: cover;
-        }
+        .navbar-brand { font-size: 20px; font-weight: bold; color: #f2f3f5; display: flex; align-items: center; gap: 10px; }
+        .navbar-brand img { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; }
+        
         .nav-buttons { display: flex; align-items: center; gap: 15px; }
         .btn {
             padding: 10px 16px; border-radius: 4px; border: none; font-size: 14px;
             font-weight: 500; cursor: pointer; color: white; text-decoration: none;
-            transition: background-color 0.2s;
-            display: flex; align-items: center; gap: 8px; /* Aligne le logo et le texte */
+            display: flex; align-items: center; gap: 8px;
+            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Animation fluide */
         }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
         .btn-login { background-color: #5865F2; }
-        .btn-login:hover { background-color: #4752c4; }
+        .btn-login:hover { background-color: #4752c4; box-shadow: 0 4px 15px rgba(88, 101, 242, 0.4); }
         .btn-join { background-color: #248046; }
-        .btn-join:hover { background-color: #1a6334; }
+        .btn-join:hover { background-color: #1a6334; box-shadow: 0 4px 15px rgba(36, 128, 70, 0.4); }
 
-        /* Style pour l'utilisateur connecté dans la navbar */
         .nav-user {
-            display: none; /* Caché par défaut */
-            align-items: center; gap: 10px;
-            background-color: #2b2d31; padding: 6px 12px; border-radius: 20px;
+            display: none; align-items: center; gap: 10px;
+            background-color: rgba(43, 45, 49, 0.8); padding: 6px 12px; border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.05);
         }
         .nav-user img { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; }
         .nav-user span { font-size: 14px; font-weight: bold; color: #f2f3f5; }
 
-        /* --- WORKSPACE & CONTROLS --- */
+        /* --- WORKSPACE & CONTROLS (Glassmorphism) --- */
         .workspace {
             display: flex; justify-content: center; align-items: flex-start;
             flex-grow: 1; padding: 40px 20px; gap: 50px;
+            animation: fadeUp 0.8s ease-out forwards;
         }
         .controls {
-            background-color: #2b2d31; padding: 20px; border-radius: 8px;
-            width: 340px; box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-            max-height: 80vh; overflow-y: auto;
+            background-color: rgba(43, 45, 49, 0.65); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 20px; border-radius: 8px; width: 340px; 
+            box-shadow: 0 8px 24px rgba(0,0,0,0.3); max-height: 80vh; overflow-y: auto;
         }
         .controls::-webkit-scrollbar { width: 8px; }
         .controls::-webkit-scrollbar-thumb { background: #1e1f22; border-radius: 4px; }
-        .controls h2 {
-            margin-top: 0; font-size: 16px; text-transform: uppercase;
-            color: #f2f3f5; margin-bottom: 20px; border-bottom: 1px solid #3f4147; padding-bottom: 10px;
-        }
+        .controls h2 { margin-top: 0; font-size: 16px; text-transform: uppercase; color: #f2f3f5; margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; }
+        
         .control-group { margin-bottom: 18px; display: flex; flex-direction: column; }
-        .control-group label {
-            font-size: 12px; font-weight: bold; color: #b5bac1; margin-bottom: 8px; text-transform: uppercase;
+        .control-group label { font-size: 12px; font-weight: bold; color: #b5bac1; margin-bottom: 8px; text-transform: uppercase; }
+        .control-group input[type="text"], .control-group textarea, .styled-select {
+            background-color: rgba(30, 31, 34, 0.8); border: 1px solid transparent; color: #dbdee1; 
+            padding: 10px; border-radius: 4px; font-family: inherit; resize: none; width: 100%; transition: 0.2s;
         }
-        .control-group input[type="text"], .control-group textarea {
-            background-color: #1e1f22; border: none; color: #dbdee1; padding: 10px;
-            border-radius: 4px; font-family: inherit; resize: none;
-        }
-        .control-group input[type="text"]:focus, .control-group textarea:focus {
-            outline: none; box-shadow: 0 0 0 2px #5865F2;
+        .control-group input[type="text"]:focus, .control-group textarea:focus, .styled-select:focus {
+            outline: none; border-color: #5865F2; box-shadow: 0 0 0 2px rgba(88,101,242,0.3);
         }
         .control-group input[type="color"] { background: none; border: none; height: 30px; width: 100%; cursor: pointer; }
-        .file-upload-btn {
-            background-color: #4e5058; color: white; padding: 8px 12px;
-            border-radius: 4px; font-size: 14px; cursor: pointer; text-align: center;
-        }
-        .file-upload-btn:hover { background-color: #6d6f78; }
+        .file-upload-btn { background-color: #4e5058; color: white; padding: 8px 12px; border-radius: 4px; font-size: 14px; cursor: pointer; text-align: center; transition: 0.2s; }
+        .file-upload-btn:hover { background-color: #6d6f78; transform: translateY(-1px); }
         .control-group input[type="file"] { display: none; }
-        .styled-select {
-            background-color: #1e1f22; border: none; color: #dbdee1; padding: 10px;
-            border-radius: 4px; font-family: inherit; width: 100%; cursor: pointer;
-        }
-        .styled-select:focus { outline: none; box-shadow: 0 0 0 2px #5865F2; }
+        
         .badge-options { display: flex; flex-wrap: wrap; gap: 8px; }
         .badge-option {
-            background-color: #1e1f22; padding: 6px 10px; border-radius: 4px;
+            background-color: rgba(30, 31, 34, 0.8); padding: 6px 10px; border-radius: 4px;
             font-size: 13px; cursor: pointer; color: #b5bac1; border: 1px solid transparent;
-            user-select: none; transition: 0.2s;
+            user-select: none; transition: all 0.2s;
         }
-        .badge-option:hover { background-color: #313338; }
+        .badge-option:hover { background-color: #313338; transform: translateY(-2px); }
         .badge-option input { display: none; }
-        .badge-option.active { background-color: #5865F2; color: white; }
+        .badge-option.active { background-color: #5865F2; color: white; box-shadow: 0 2px 8px rgba(88,101,242,0.4); }
 
-        /* --- PROFILE CARD --- */
+        /* --- PROFILE CARD (Glow & Neon borders) --- */
         .profile-card {
             background-color: #232428; width: 340px; border-radius: 8px;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.24); overflow: hidden; position: relative;
-            position: sticky; top: 40px; 
+            overflow: hidden; position: sticky; top: 40px; 
+            border: 1px solid rgba(255, 255, 255, 0.08); /* Bordure subtile fausse 3D */
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4), 0 0 20px rgba(88, 101, 242, 0.15); /* Ombre Glow */
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
-        .banner { height: 120px; background-color: #5865F2; background-size: cover; background-position: center; }
+        .profile-card:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), 0 0 30px rgba(88, 101, 242, 0.25); }
+        .banner { height: 120px; background-color: #5865F2; background-size: cover; background-position: center; transition: background-color 0.3s; }
         .header { position: relative; padding: 0 16px; }
         .avatar-wrapper { position: absolute; top: -60px; background-color: #232428; border-radius: 50%; padding: 6px; }
-        .avatar {
-            width: 80px; height: 80px; border-radius: 50%; background-color: #1e1f22;
-            background-image: url('https://via.placeholder.com/80/5865F2/FFFFFF?text=Avatar'); 
-            background-size: cover; background-position: center;
-        }
+        .avatar { width: 80px; height: 80px; border-radius: 50%; background-color: #1e1f22; background-image: url('https://via.placeholder.com/80/5865F2/FFFFFF?text=Avatar'); background-size: cover; background-position: center; box-shadow: inset 0 0 0 1px rgba(0,0,0,0.1); }
+        
+        /* --- BADGES & TOOLTIPS --- */
         .badges { display: flex; justify-content: flex-end; padding-top: 12px; height: 30px; gap: 4px; }
         .badge {
             width: 22px; height: 22px; background-color: #2b2d31; border-radius: 4px;
-            display: flex; justify-content: center; align-items: center; overflow: hidden;
+            display: flex; justify-content: center; align-items: center; 
+            position: relative; /* Nécessaire pour le tooltip */
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
+        .badge:hover { transform: scale(1.2) translateY(-2px); z-index: 10; }
         .badge img { width: 100%; height: 100%; object-fit: contain; }
-        .user-info { padding: 16px; margin-top: 10px; background-color: #111214; border-radius: 8px; margin: 16px; }
+        
+        /* Le code magique des Tooltips (Bulles d'infos) */
+        .badge::after {
+            content: attr(data-tooltip); position: absolute; bottom: 130%; left: 50%;
+            transform: translateX(-50%) scale(0.8); opacity: 0;
+            background: #111214; color: #dbdee1; padding: 6px 10px; border-radius: 6px;
+            font-size: 12px; font-weight: bold; white-space: nowrap; pointer-events: none;
+            transition: all 0.2s ease; box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+        }
+        .badge:hover::after { transform: translateX(-50%) scale(1); opacity: 1; }
+
+        .user-info { padding: 16px; margin-top: 10px; background-color: #111214; border-radius: 8px; margin: 16px; border: 1px solid rgba(255,255,255,0.03); }
         .username { font-size: 20px; font-weight: bold; color: #f2f3f5; margin: 0; word-wrap: break-word; }
         .tag { font-size: 14px; color: #b5bac1; margin: 2px 0 12px 0; }
         .about-title { font-size: 12px; font-weight: bold; text-transform: uppercase; color: #b5bac1; margin-bottom: 8px; }
-        .about-text { 
-            font-size: 14px; 
-            line-height: 1.4; 
-            margin: 0; 
-            white-space: pre-wrap; 
-            word-wrap: break-word; 
-            color: #dbdee1; /* NOUVEAU : Force la couleur claire */
-        }
+        .about-text { font-size: 14px; line-height: 1.4; margin: 0; white-space: pre-wrap; word-wrap: break-word; color: #dbdee1; }
     </style>
 </head>
 <body>
@@ -340,6 +327,10 @@
         function addBadgeToCard(imageSrc, altText) {
             const badgeElement = document.createElement('div');
             badgeElement.className = 'badge';
+            
+            // NOUVEAU : On ajoute l'attribut data-tooltip pour la bulle d'info !
+            badgeElement.setAttribute('data-tooltip', altText.replace(/_/g, ' ').toUpperCase());
+            
             const img = document.createElement('img');
             img.src = imageSrc;
             img.alt = altText;
